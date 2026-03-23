@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Reports and generated artifacts
+reports/*.json
+reports/*.txt
+*.log
+
+# Virtual environments
+.venv/
+venv/
