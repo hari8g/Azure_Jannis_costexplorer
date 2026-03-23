@@ -48,3 +48,35 @@ This document maps the AWS-oriented structure to Azure services so the toolkit c
 - Multi-subscription runner
 - HTML dashboard
 - CI automation and policy gating
+
+### Phase 3 Status
+
+- Implemented `multi-subscription-audit.sh` for cross-subscription live aggregation
+- Implemented dashboard generator:
+  - `dashboard/dashboard-gen.py`
+  - `dashboard/dashboard-gen.sh`
+- Implemented CI policy gate workflow:
+  - `.github/workflows/ci-policy-gates.yml`
+- Implemented policy check utility:
+  - `scripts/policy_gate.py`
+
+## Phase 4
+
+- Cost anomaly detection and alerting
+- Tag compliance checks and governance thresholds
+- Alert payload generation and notification wiring
+
+### Phase 4 Status (Milestone 1)
+
+- Implemented anomaly detection:
+  - `scripts/detect_anomalies.py`
+- Implemented tag compliance checks:
+  - `scripts/check_tag_compliance.py`
+- Implemented alert payload builder:
+  - `scripts/build_alert_payload.py`
+- Implemented governance orchestrator:
+  - `phase4-governance.sh`
+- Implemented notification utility:
+  - `alerts/notify.sh`
+- Added governance CI workflow:
+  - `.github/workflows/phase4-governance.yml`

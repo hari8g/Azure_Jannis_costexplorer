@@ -1,0 +1,21 @@
+[
+  {
+    "id": "/subscriptions/aaa/resourceGroups/rg1/providers/Microsoft.Compute/virtualMachines/vm1",
+    "name": "vm1",
+    "type": "Microsoft.Compute/virtualMachines",
+    "tags": {
+      "owner": "team-a",
+      "costCenter": "cc-101",
+      "environment": "prod"
+    }
+  },
+  {
+    "id": "/subscriptions/aaa/resourceGroups/rg2/providers/Microsoft.Storage/storageAccounts/st1",
+    "name": "st1",
+    "type": "Microsoft.Storage/storageAccounts",
+    "tags": {
+      "owner": "team-b",
+      "environment": "dev"
+    }
+  }
+]

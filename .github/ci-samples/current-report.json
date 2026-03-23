@@ -1,0 +1,14 @@
+{
+  "mode": "live",
+  "summary": {
+    "finding_count": 4,
+    "savings_low": 180.0,
+    "savings_high": 520.0
+  },
+  "findings": [
+    { "id": "vm-1", "severity": "high" },
+    { "id": "aks-1", "severity": "medium" },
+    { "id": "sql-1", "severity": "low" },
+    { "id": "storage-1", "severity": "medium" }
+  ]
+}

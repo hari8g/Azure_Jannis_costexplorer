@@ -1,0 +1,40 @@
+name: Azure FinOps CI Policy Gates
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  validate-and-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Build validation
+        run: ./build.sh
+
+      - name: Create sample report for gate validation
+        run: |
+          mkdir -p reports
+          cat > reports/ci-sample-report.json <<'EOF'
+          {
+            "summary": { "finding_count": 2 },
+            "findings": [
+              { "id": "sample-low", "severity": "low" },
+              { "id": "sample-medium", "severity": "medium" }
+            ]
+          }
+          EOF
+
+      - name: Run policy gate
+        run: python3 scripts/policy_gate.py --report reports/ci-sample-report.json --max-high-severity 0 --max-findings 50

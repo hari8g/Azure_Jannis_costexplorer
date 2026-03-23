@@ -1,0 +1,61 @@
+name: Phase 4 Governance Checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build validation
+        run: ./build.sh
+
+      - name: Run anomaly detection
+        run: |
+          mkdir -p reports/history
+          cp .github/ci-samples/history-report-1.json reports/history/
+          cp .github/ci-samples/history-report-2.json reports/history/
+          cp .github/ci-samples/history-report-3.json reports/history/
+          python3 scripts/detect_anomalies.py \
+            --current-report .github/ci-samples/current-report.json \
+            --history-dir reports/history \
+            --out reports/ci-anomaly.json
+
+      - name: Run tag compliance
+        run: |
+          python3 scripts/check_tag_compliance.py \
+            --resources-json .github/ci-samples/resources.json \
+            --required-tags owner,costCenter,environment \
+            --out reports/ci-tag-compliance.json
+
+      - name: Build alert payload
+        run: |
+          python3 scripts/build_alert_payload.py \
+            --report .github/ci-samples/current-report.json \
+            --anomaly reports/ci-anomaly.json \
+            --tag-compliance reports/ci-tag-compliance.json \
+            --out reports/ci-alert-payload.json
+
+      - name: Enforce governance thresholds
+        run: |
+          python3 scripts/policy_gate.py \
+            --report .github/ci-samples/current-report.json \
+            --max-high-severity 1 \
+            --max-findings 100
+          python3 - <<'PY'
+          import json
+          with open("reports/ci-tag-compliance.json","r",encoding="utf-8") as f:
+              tag = json.load(f)
+          if tag.get("summary",{}).get("compliance_percentage",0) < 60:
+              raise SystemExit("Tag compliance below 60% threshold")
+          print("Tag compliance threshold check passed")
+          PY
